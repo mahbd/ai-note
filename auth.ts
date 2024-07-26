@@ -2,15 +2,12 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import prisma from "./prisma/client";
+import Passkey from "@auth/core/providers/passkey";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-  ],
+  providers: [Google, Passkey],
+  experimental: { enableWebAuthn: true },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {

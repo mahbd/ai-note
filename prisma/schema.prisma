@@ -32,6 +32,7 @@ model Note {
 
 enum Role {
   USER
+  STAFF
   ADMIN
 }
 
@@ -48,7 +49,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  notes Note[]
+  notes         Note[]
+  Authenticator Authenticator[]
 }
 
 model Account {
@@ -91,4 +93,19 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Authenticator {
+  credentialID         String  @id @map("_id")
+  userId               String  @db.ObjectId
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, credentialID])
 }
