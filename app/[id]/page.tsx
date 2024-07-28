@@ -1,10 +1,8 @@
 import prisma from "@/prisma/client";
 import { notFound, redirect } from "next/navigation";
-import NoteForm from "@/app/[id]/edit/NoteForm";
 import { auth } from "@/auth";
-import Markdown from "react-markdown";
-import rehypeRaw from "rehype-raw";
 import NoteActions from "@/components/NoteActions";
+import ShowMDContent from "@/app/[id]/ShowMDContent";
 
 interface Props {
   params: { id: string };
@@ -32,11 +30,7 @@ const NotePage = async ({ params }: Props) => {
     <div className="m-2 w-full">
       <h1 className="text-center text-4xl">{note.title}</h1>
       <NoteActions className={"mb-3"} note={note} />
-      <div className="prose">
-        <Markdown rehypePlugins={[rehypeRaw]} disallowedElements={["script"]}>
-          {note.content}
-        </Markdown>
-      </div>
+      <ShowMDContent content={note.content} />
     </div>
   );
 };

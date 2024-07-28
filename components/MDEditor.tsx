@@ -20,10 +20,23 @@ interface Props {
 const MDEditor = ({ name, error, onChange, placeholder, value }: Props) => {
   const customToolbar = useMemo(() => {
     return {
+      blockStyles: {
+        code: "```",
+      },
       toolbar: [
         "bold",
         "italic",
         "code",
+        {
+          name: "fullCode",
+          className: "fa fa-code",
+          title: "Full Code",
+          action: (editor) => {
+            const cm = editor.codemirror;
+            cm.replaceSelection("```ts\n" + cm.getSelection() + "\n```");
+            cm.focus();
+          },
+        },
         {
           name: "headers",
           className: "fa fa-header",
